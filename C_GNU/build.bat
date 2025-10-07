@@ -1,0 +1,1 @@
+g++ 2D.cpp -o 2D.exe -lmpfr -lgmp

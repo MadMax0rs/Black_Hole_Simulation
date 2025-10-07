@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<project version="2">
+	<pipeline>
+		<pass name="Simple" type="shader" active="true" patchverts="1">
+			<shader type="vs" path="shaders\frag_SimpleVS.glsl" entry="main" />
+			<shader type="ps" path="shaders\frag_SimplePS.glsl" entry="main" />
+			<inputlayout>
+				<item value="Position" semantic="POSITION" />
+			</inputlayout>
+			<rendertexture />
+			<items>
+				<item name="Quad" type="geometry">
+					<type>ScreenQuadNDC</type>
+					<width>1</width>
+					<height>1</height>
+					<depth>1</depth>
+					<topology>TriangleList</topology>
+				</item>
+			</items>
+			<itemvalues />
+			<variables>
+				<variable type="float2" name="resolution" system="ViewportSize" />
+			</variables>
+			<macros />
+		</pass>
+	</pipeline>
+	<objects />
+	<cameras />
+	<settings>
+		<entry type="property" name="Simple" item="pipe" />
+		<entry type="file" name="Simple" shader="vs" />
+		<entry type="file" name="Simple" shader="ps" />
+		<entry type="camera" fp="false">
+			<distance>4</distance>
+			<pitch>25</pitch>
+			<yaw>319</yaw>
+			<roll>360</roll>
+		</entry>
+		<entry type="clearcolor" r="0" g="0" b="0" a="0" />
+		<entry type="usealpha" val="false" />
+		<entry type="bkpt" file="D:/school/SpaceScience/blackHoleSim/SHADERed/shaders/frag_SimplePS.glsl" line="269" use_cond="false" cond="" enabled="true" />
+		<entry type="bkpt" file="D:/school/SpaceScience/blackHoleSim/SHADERed/shaders/frag_SimplePS.glsl" line="268" use_cond="false" cond="" enabled="true" />
+	</settings>
+	<plugindata />
+</project>
