@@ -50,7 +50,8 @@
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
 				"-lmpfr",
-				"-lgmp"
+				"-lgmp",
+				"-march=native"
             ],
             "options": {
                 "cwd": "${fileDirname}"
