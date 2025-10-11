@@ -5,7 +5,7 @@ using namespace std;
 
 
 const int PRECISION = 256;
-static double EPSILON = 0.01;
+static double EPSILON = 0.02;
 static double c = 3.0e8;
 static double G = 6.674e-11;
 
@@ -70,8 +70,8 @@ class floating {
 		}
 		// Want all negative exponents to show, but not 0 or 1
 		if (exp != 1) {
-			str += "e";
-			str += to_string(exp - 1);
+			str += "*10^{";
+			str += to_string(exp - 1) + "}";
 		}
 
 		mpfr_free_str(mantissa);
@@ -195,8 +195,7 @@ public:
 		string str;
 		mp_exp_t exp;
 		str += this->x.ToString(base, precision) + ", ";
-		str += this->y.ToString(base, precision) + ", ";
-		str += this->z.ToString(base, precision);
+		str += this->y.ToString(base, precision);
 		return "(" + str + ")";
 	}
 	
@@ -241,70 +240,28 @@ static void step(vec3* pos, vec3* vel, floating mass, vec3* acceleration) {
 	// Calculate Christoffel Symbols
 
 	// GM/(r^2c^2)(1/(1-2GM/(rc^2)))
-	std::cout << "M: " << mass.ToString(10, 5) << ", G: " << G << ", r: " << (pos->y).ToString(10, 5) << ", c: " << c << std::endl;
+	// std::cout << "M: " << mass.ToString(10, 5) << ", G: " << G << ", r: " << (pos->y).ToString(10, 5) << ", c: " << c << std::endl;
 	floating gammaTTR = floating(((G*mass)/((*pos->r)*(*pos->r)*c*c))*(1.0/(1.0 - (2.0*G*mass/((*pos->r)*c*c)))));
-	std::cout << "gammaTTR: " << gammaTTR.ToString(10, 10) << std::endl;
+	// std::cout << "gammaTTR: " << gammaTTR.ToString(10, 10) << std::endl;
 
 	floating gammaTRT = floating(gammaTTR);
-	std::cout << "gammaTRT: " << gammaTRT.ToString(10, 10) << std::endl;
+	// std::cout << "gammaTRT: " << gammaTRT.ToString(10, 10) << std::endl;
 
 	floating gammaRTT = floating((G*mass/((*pos->r)*(*pos->r)))*(1.0 - (2.0*G*mass/((*pos->r)*c*c))));
-	std::cout << "gammaRTT: " << gammaRTT.ToString(10, 10) << std::endl;
+	// std::cout << "gammaRTT: " << gammaRTT.ToString(10, 10) << std::endl;
 
 	floating gammaRRR = floating(-G*mass/((*pos->r)*(*pos->r)*c*c)*(1.0/(1.0 - (2.0*G*mass/((*pos->r)*c*c)))));
-	std::cout << "gammaRRR: " << gammaRRR.ToString(10, 10) << std::endl;
+	// std::cout << "gammaRRR: " << gammaRRR.ToString(10, 10) << std::endl;
 
-
-	// temp = 1-2GM/(rc^2)
-	// mpfr_mul_d(temp, mass, G, MPFR_RNDN);
-	// mpfr_mul_d(temp, temp, 2, MPFR_RNDN);
-	// mpfr_set_d(temp2, c, MPFR_RNDN);
-	// mpfr_sqr(temp2, temp2, MPFR_RNDN);
-	// mpfr_mul(temp2, temp2, (*pos->r), MPFR_RNDN);
-	// mpfr_div(temp, temp, temp2, MPFR_RNDN);
-	// mpfr_d_sub(temp, 1, temp, MPFR_RNDN);
-
-	// gammaRTT = GM/r^2
-	// mpfr_mul_d(gammaRTT, mass, G, MPFR_RNDN);
-	// mpfr_sqr(temp2, (*pos->r), MPFR_RNDN);
-	// mpfr_div(gammaRTT, gammaRTT, temp2, MPFR_RNDN);
-	// gammaRTT = GM/r^2(1-2GM/(rc^2))
-	// mpfr_mul(gammaRTT, gammaRTT, temp, MPFR_RNDN);
-
-
-	// temp = 1/(1-2GM/(rc^2))
-	// mpfr_d_div(temp, 1, temp, MPFR_RNDN);
-
-	// gammaTTR = GM/(r^2c^2)
-	// mpfr_set_d(temp2, c, MPFR_RNDN);
-	// mpfr_mul(temp2, temp2, (*pos->r), MPFR_RNDN);
-	// mpfr_sqr(temp2, temp2, MPFR_RNDN);
-	// mpfr_mul_d(gammaTTR, mass, G, MPFR_RNDN);
-	// mpfr_div(gammaTTR, gammaTTR, temp2, MPFR_RNDN);
-
-	// gammaRRR = gammaTRT = gammaTTR = GM/(r^2c^2)(1/(1-2GM/(rc^2)))
-	// mpfr_mul(gammaTTR, gammaTTR, temp, MPFR_RNDN);
-	// mpfr_set(gammaTRT, gammaTTR, MPFR_RNDN);
-	//gammaRRR = -GM/(r^2c^2)(1/(1-2GM/(rc^2)))
-	// mpfr_mul_d(gammaRRR, gammaRRR, -1, MPFR_RNDN);
-	
-	//vec3 acceleration = vec3(0.0, 0.0, 0.0);
 	
 	// // acceleration.t = (gammaTTR + gammaTRT)vel.t * vel.r
 	*acceleration->t = (-gammaTTR * (*vel->t)*(*vel->r)) - (gammaTRT * (*vel->t)*(*vel->r));
-	// mpfr_add(acceleration->x, gammaTTR, gammaTRT, MPFR_RNDN);
-	// mpfr_mul(acceleration->x, acceleration->x, vel->x, MPFR_RNDN);
-	// mpfr_mul(acceleration->x, acceleration->x, vel->y, MPFR_RNDN);
 	
 	// // acceleration.r = gammaRTT * vel.t^2 - gammaRRR * vel.r^2
 	*acceleration->r = (-gammaRTT * (*vel->t)*(*vel->t)) - (gammaRRR * (*vel->r)*(*vel->r));
 	// std::cout << "gammaRTT: " << (-gammaRTT * (*vel->t)*(*vel->t)).ToString(10, 10) << " - " << ((gammaRRR * (*vel->r)*(*vel->r))).ToString(10, 10) << " = " << (*acceleration->r).ToString(10, 10) << std::endl;
 	// std::cout << "Acceleration: " << acceleration->ToString(10, 10) << std::endl;
-	// mpfr_sqr(temp, vel->x , MPFR_RNDN);
-	// mpfr_mul(temp, temp, gammaRTT, MPFR_RNDN);
-	// mpfr_sqr(acceleration->y, vel->y, MPFR_RNDN);
-	// mpfr_mul(acceleration->y, acceleration->y, gammaRRR, MPFR_RNDN);
-	// mpfr_sub(acceleration->y, temp, acceleration->y, MPFR_RNDN);
+
 
 	gammaTTR.clear();
 	gammaTRT.clear();
@@ -314,24 +271,28 @@ static void step(vec3* pos, vec3* vel, floating mass, vec3* acceleration) {
 	// std::cout << vel->y.ToString(10, 10) << " + "<< acceleration->y.ToString(10, 10) << " = ";
 	// std::cout << "acceleration: " << acceleration->y.ToString(10, 10) << std::endl;
 	(*vel) += (*acceleration);
-	std::cout << vel->y.ToString(10, 10) << std::endl;
+	// std::cout << "Vel: " << vel->ToString(10, 10) << std::endl;
+	// std::cout << vel->y.ToString(10, 10) << std::endl;
 
 	(*pos) += (*vel);
-	std::cout << "pos: " << pos->ToString() << std::endl;
+	std::cout << pos->ToString(10, 10) << ", ";
 }
 
 int main() {
-	vec3 pos = vec3(0, 10, 0);
-	std::cout << "pos orig: " << pos.ToString() << std::endl;
+	vec3 pos = vec3(0, 2, 0);
+	std::cout << pos.ToString() << ", ";
 
-	vec3 vel = vec3(EPSILON, 0, 0);
+	vec3 vel = vec3(EPSILON, 0.001, 0);
 
-	floating mass = floating(100.0, PRECISION);
+	floating mass = floating(1000000000.0);
 
 	vec3 acceleration = vec3(0.0, 0.0, 0.0);
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 10000; i++) {
 		step(&pos, &vel, mass, &acceleration);
+		if (mpfr_get_d(pos.y.num, MPFR_RNDN) <= 0.0) {
+			break;
+		}
 	}
 
 	// Exit
