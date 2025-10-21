@@ -76,7 +76,18 @@
 		"__split_buffer": "cpp",
 		"__tree": "cpp",
 		"map": "cpp",
-		"set": "cpp"
+		"set": "cpp",
+		"__locale": "cpp",
+		"fstream": "cpp",
+		"locale": "cpp",
+		"array": "cpp",
+		"atomic": "cpp",
+		"memory": "cpp",
+		"istream": "cpp",
+		"mutex": "cpp",
+		"streambuf": "cpp",
+		"__bit_reference": "cpp",
+		"execution": "cpp"
 	},
 	"C_Cpp.intelliSenseEngine": "Tag Parser",
 	"C_Cpp.default.compilerArgs": [

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<project version="2">
+	<pipeline>
+		<pass name="Simple" type="shader" active="true" patchverts="1">
+			<shader type="vs" path="shaders\test_SimpleVS.glsl" entry="main" />
+			<shader type="ps" path="shaders\test_SimplePS.glsl" entry="main" />
+			<inputlayout>
+				<item value="Position" semantic="POSITION" />
+			</inputlayout>
+			<rendertexture />
+			<items>
+				<item name="Quad" type="geometry">
+					<type>ScreenQuadNDC</type>
+					<width>1</width>
+					<height>1</height>
+					<depth>1</depth>
+					<topology>TriangleList</topology>
+				</item>
+			</items>
+			<itemvalues>
+				<value variable="uResolution" for="Quad">
+					<row>
+						<value>901</value>
+						<value>571</value>
+					</row>
+				</value>
+			</itemvalues>
+			<variables>
+				<variable type="float2" name="uResolution" system="ViewportSize" />
+				<variable type="float" name="uTime" system="Time" />
+			</variables>
+			<macros />
+		</pass>
+	</pipeline>
+	<objects />
+	<cameras />
+	<settings>
+		<entry type="property" name="Simple" item="pipe" />
+		<entry type="file" name="Simple" shader="vs" />
+		<entry type="file" name="Simple" shader="ps" />
+		<entry type="camera" fp="false">
+			<distance>4</distance>
+			<pitch>25</pitch>
+			<yaw>319</yaw>
+			<roll>360</roll>
+		</entry>
+		<entry type="clearcolor" r="0" g="0" b="0" a="0" />
+		<entry type="usealpha" val="false" />
+		<entry type="vecwatch_expr" expr="rayMarchedVelocity" color_r="0.87843138" color_g="0.117647059" color_b="0.647058845" />
+		<entry type="vecwatch_expr" expr="camRight" color_r="0.752941191" color_g="0.0431372561" color_b="0.274509817" />
+		<entry type="vecwatch_expr" expr="rayDir/20.0" color_r="0.454901963" color_g="0.729411781" color_b="0.164705887" />
+		<entry type="vecwatch_expr" expr="getPolar(rayMarchedPosition + rayDir/20.0)" color_r="0.00784313772" color_g="0.211764708" color_b="0.819607854" />
+		<entry type="vecwatch_expr" expr="getPolar(rayMarchedPosition)" color_r="0.0235294122" color_g="0.278431386" color_b="0.101960786" />
+		<entry type="vecwatch_expr" expr="rayMarchedVelocity" color_r="0.305882365" color_g="0.337254912" color_b="0.250980407" />
+		<entry type="vecwatch_expr" expr="rayMarchedPosition" color_r="0.674509823" color_g="0.349019617" color_b="0.203921571" />
+		<entry type="bkpt" file="D:/school/SpaceScience/blackHoleSim/SHADERed/test/shaders/test_SimplePS.glsl" line="134" use_cond="false" cond="" enabled="true" />
+		<entry type="bkpt" file="D:/school/SpaceScience/blackHoleSim/SHADERed/test/shaders/test_SimplePS.glsl" line="141" use_cond="false" cond="" enabled="true" />
+	</settings>
+	<plugindata />
+</project>

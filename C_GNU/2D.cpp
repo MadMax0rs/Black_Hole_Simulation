@@ -5,9 +5,9 @@ using namespace std;
 
 
 const int PRECISION = 256;
-static double EPSILON = 0.02;
-static double c = 3.0e8;
-static double G = 6.674e-11;
+const double EPSILON = 0.01;
+const double c = 3.0e8;
+const double G = 6.674e-11;
 
 class floating {
 	public:
@@ -190,6 +190,15 @@ public:
 		this->r = &this->y;
 		this->phi = &this->z;
 	}
+	vec3(const vec3& vec) {
+		this->x = floating(vec.x);
+		this->y = floating(vec.y);
+		this->z = floating(vec.z);
+
+		this->t = &this->x;
+		this->r = &this->y;
+		this->phi = &this->z;
+	}
 	
 	string ToString(int base = 10, int precision = 10) {
 		string str;
@@ -201,9 +210,12 @@ public:
 	
 	~vec3() {
 		try {
-			this->x.clear();
-			this->y.clear();
-			this->z.clear();
+			x.clear();
+			y.clear();
+			z.clear();
+			t = nullptr;
+			r = nullptr;
+			phi = nullptr;
 		} catch (std::exception& ex) {
 			std::cout << ": vec3 already deallocated" << std::endl;
 		} catch (std::string& ex) {
