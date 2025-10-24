@@ -168,12 +168,23 @@ class vec4:
 	
 
 saves = [
-	{"pos": vec4(0, vec3(0, -2, -10).toSphere()), "vel": vec4(0, vec3(-0.01, 0.00023, 0)), "algorithem": "step"},
-	{"pos": vec4(0, vec3(0, -2, -10).toSphere()), "vel": vec4(0, vec3(-0.01, 0.00023, 0.0001)), "algorithem": "step"},
+	{"pos": vec4(0, vec3(0, -2, -10).toSphere()), "vel": vec4(0, vec3(-0.01, 0.00024, 0)), "mass": 1, "rk4": False},
+	{"pos": vec4(0, vec3(0, -2, -10).toSphere()), "vel": vec4(0, vec3(-0.01, 0.00023, 0.0001)), "mass": 1, "rk4": False},
+	{"pos": vec4(0, vec3(5, -2, -10).toSphere()), "vel": vec4(0, vec3(-0.01, 0.01, 0.001)), "mass": 1, "rk4": True},
 ]
-pos = vec4(0, vec3(0, -2, -10).toSphere())
-vel = vec4(0, vec3(-0.01, 0.00023, 0.00005))
+pos = vec4(0, vec3(5, -2, -10).toSphere())
+vel = vec4(0, vec3(-0.01, 0.01, 0.001))
+useRk4 = False
 mass: float = 1
+
+def load(index: int):
+	global pos, vel, mass, useRk4
+	pos = saves[index]["pos"]
+	vel = saves[index]["vel"]
+	mass = saves[index]["mass"]
+	useRk4 = saves[index]["rk4"]
+
+load(1)
 
 def step(pos, vel) -> vec4:
 
@@ -224,7 +235,7 @@ def rk4():
 ITERATIONS = 20000
 
 
-with open("D:/school/SpaceScience/blackHoleSim/C_GNU/3DOutput.txt", "w") as file:
+with open("D:/school/SpaceScience/blackHoleSim/py/3DOutput.txt", "w") as file:
 
 	for i in range(ITERATIONS):
 		if (i%10 == 0):
@@ -232,10 +243,12 @@ with open("D:/school/SpaceScience/blackHoleSim/C_GNU/3DOutput.txt", "w") as file
 		if (i%1000 == 0):
 			print(i)
 
-		acc = step(pos, vel)
-		vel += acc
-		pos += vel
-		# rk4()
+		if (useRk4):
+			rk4()
+		else:
+			acc = step(pos, vel)
+			vel += acc
+			pos += vel
 		if pos.r < 2.0*mass:
 			file.write(pos.yzw.toCart().XZString())
 			break
