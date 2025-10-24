@@ -1,4 +1,4 @@
-The latest code is in C_GNU/3D.py
+The latest code is in py/3D.py
 
 after running it, there will be a bunch of stuff in 3DOutput.txt
 
